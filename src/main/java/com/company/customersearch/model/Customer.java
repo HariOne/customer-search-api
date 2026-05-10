@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,7 +28,7 @@ public class Customer {
     private String email;
 
     @JsonProperty("dateOfBirth")
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
 
     @JsonProperty("fullAddress")
     private Address fullAddress;

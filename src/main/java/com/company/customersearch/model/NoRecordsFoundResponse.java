@@ -14,4 +14,10 @@ public class NoRecordsFoundResponse {
 
     @JsonProperty("message")
     private String message;
+
+    public static NoRecordsFoundResponse of() {
+        return NoRecordsFoundResponse.builder()
+                .message("No customer records found")
+                .build();
+    }
 }
