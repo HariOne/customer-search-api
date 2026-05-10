@@ -6,13 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Customer {
+public class MinimalCustomer {
 
     @JsonProperty("customerId")
     private String customerId;
@@ -26,15 +24,12 @@ public class Customer {
     @JsonProperty("phoneNumber")
     private String phoneNumber;
 
-    @JsonProperty("email")
-    private String email;
-
-    @JsonProperty("dateOfBirth")
-    private LocalDate dateOfBirth;
-
-    @JsonProperty("fullAddress")
-    private Address fullAddress;
-
-    @JsonProperty("loyaltyDetails")
-    private LoyaltyDetails loyaltyDetails;
+    public static MinimalCustomer fromCustomer(Customer customer) {
+        return MinimalCustomer.builder()
+                .customerId(customer.getCustomerId())
+                .firstName(customer.getFirstName())
+                .lastName(customer.getLastName())
+                .phoneNumber(customer.getPhoneNumber())
+                .build();
+    }
 }
