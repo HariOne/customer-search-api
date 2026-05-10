@@ -6,17 +6,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Address {
-    private String street;
-    private String city;
-    private String state;
-    private String postalCode;
-    private String country;
-    private String latitude;
-    private String longitude;
+public class CustomerSearchResponse {
+    private String message;
+    private Customer customer;
+    private List<CustomerSummary> customers;
+    private String correlationId;
 }

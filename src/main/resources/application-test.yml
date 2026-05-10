@@ -5,14 +5,11 @@ spring:
 server:
   port: 8081
 
-third-party-api:
-  url: https://test-api.com/customers/search
-  timeout-seconds: 10
-  max-retries: 1
-  retry-delay-millis: 500
-
 logging:
   level:
     root: WARN
     com.company.customersearch: INFO
-    org.springframework.web: WARN
+
+external:
+  api:
+    base-url: http://mock-api:3000

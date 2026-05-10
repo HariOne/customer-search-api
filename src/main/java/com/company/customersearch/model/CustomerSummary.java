@@ -11,12 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Address {
-    private String street;
-    private String city;
-    private String state;
-    private String postalCode;
-    private String country;
-    private String latitude;
-    private String longitude;
+public class CustomerSummary {
+    private String customerId;
+    private String firstName;
+    private String lastName;
+    private String email;
 }

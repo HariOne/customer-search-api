@@ -18,10 +18,8 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
     private static final String CORRELATION_ID_HEADER = "Correlation-Id";
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         String correlationId = request.getHeader(CORRELATION_ID_HEADER);
 
@@ -30,10 +28,9 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
         }
 
         CorrelationIdUtil.setCorrelationId(correlationId);
-        log.info("Request received with Correlation ID: {}", correlationId);
+        response.setHeader(CORRELATION_ID_HEADER, correlationId);
 
         try {
-            response.addHeader(CORRELATION_ID_HEADER, correlationId);
             filterChain.doFilter(request, response);
         } finally {
             CorrelationIdUtil.clearCorrelationId();

@@ -1,23 +1,21 @@
 package com.company.customersearch.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoyaltyDetails {
-
-    @JsonProperty("loyaltyId")
-    private String loyaltyId;
-
-    @JsonProperty("tier")
+    private String loyaltyProgramName;
+    private String memberId;
     private String tier;
-
-    @JsonProperty("status")
-    private String status;
+    private Integer points;
+    private String joinDate;
+    private String expiryDate;
 }

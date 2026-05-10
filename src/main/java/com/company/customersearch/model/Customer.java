@@ -1,38 +1,29 @@
 package com.company.customersearch.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Customer {
-
-    @JsonProperty("customerId")
     private String customerId;
-
-    @JsonProperty("firstName")
     private String firstName;
-
-    @JsonProperty("lastName")
     private String lastName;
-
-    @JsonProperty("phoneNumber")
-    private String phoneNumber;
-
-    @JsonProperty("email")
     private String email;
-
-    @JsonProperty("dateOfBirth")
+    private String phoneNumber;
     private String dateOfBirth;
-
-    @JsonProperty("fullAddress")
-    private Address fullAddress;
-
-    @JsonProperty("loyaltyDetails")
-    private LoyaltyDetails loyaltyDetails;
+    private Address address;
+    private String loyaltyId;
+    private String affiliation;
+    private List<LoyaltyDetails> loyaltyDetails;
+    private String createdAt;
+    private String updatedAt;
 }
