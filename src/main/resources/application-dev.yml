@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: dev
+
+server:
+  port: 8080
+
+third-party-api:
+  url: https://dev-api.com/customers/search
+  timeout-seconds: 30
+  max-retries: 3
+  retry-delay-millis: 1000
+
+logging:
+  level:
+    root: INFO
+    com.company.customersearch: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG

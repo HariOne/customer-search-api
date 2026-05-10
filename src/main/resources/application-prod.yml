@@ -1,39 +1,22 @@
+spring:
+  profiles:
+    active: prod
+
 server:
   port: 8080
-  shutdown: graceful
-  tomcat:
-    threads:
-      max: 200
-      min-spare: 10
 
-external-api:
-  base-url: https://api.thirdparty.com
-  endpoints:
-    customers-search: /v1/customers/search
-  timeout-ms: 10000
-  retry:
-    max-attempts: 5
-    delay-ms: 2000
-    multiplier: 1.5
+third-party-api:
+  url: https://api.production.com/customers/search
+  timeout-seconds: 30
+  max-retries: 5
+  retry-delay-millis: 2000
 
 logging:
   level:
     root: WARN
     com.company.customersearch: INFO
+    org.springframework.web: WARN
   file:
-    name: logs/application.log
+    name: logs/customer-search-api.log
     max-size: 10MB
     max-history: 30
-  pattern:
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - [%X{correlationId}] - %msg%n"
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,liveness,readiness
-  health:
-    livenessState:
-      enabled: true
-    readinessState:
-      enabled: true

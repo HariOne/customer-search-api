@@ -1,7 +1,6 @@
 package com.company.customersearch.controller;
 
 import com.company.customersearch.enums.Brand;
-import com.company.customersearch.exception.InvalidBrandException;
 import com.company.customersearch.service.CustomerService;
 import com.company.customersearch.util.CorrelationIdUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/v1")
-@Tag(name = "Customer Search", description = "Customer search operations")
+@Tag(name = "Customer Search", description = "Endpoints for searching customers")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -35,74 +33,81 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @Operation(summary = "Search customers by brand",
-            description = "Search customers across multiple brands with optional filters")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success"),
-            @ApiResponse(responseCode = "400", description = "Invalid brand"),
-            @ApiResponse(responseCode = "502", description = "External API error"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
     @GetMapping("/{brand}/customers")
+    @Operation(
+            summary = "Search customers by brand",
+            description = "Search for customers across multiple brands with optional filters")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Customers found",
+                    content = @Content(schema = @Schema(implementation = Object.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid brand or validation failure"),
+            @ApiResponse(
+                    responseCode = "502",
+                    description = "External API error"),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error")
+    })
     public ResponseEntity<Object> searchCustomers(
-            @PathVariable("brand")
-            @Parameter(description = "Brand name (Zoomcar, Revv, MyChoize, Myles)", required = true)
-            String brandStr,
+            @PathVariable
+            @Parameter(description = "Brand name. Allowed values: Zoomcar, Revv, MyChoize, Myles")
+            String brand,
 
-            @RequestParam(value = "first_name", required = false)
-            @Parameter(description = "Customer first name", required = false)
-            String firstName,
+            @RequestParam(required = false)
+            @Parameter(description = "First name of the customer")
+            String first_name,
 
-            @RequestParam(value = "last_name", required = false)
-            @Parameter(description = "Customer last name", required = false)
-            String lastName,
+            @RequestParam(required = false)
+            @Parameter(description = "Last name of the customer")
+            String last_name,
 
-            @RequestParam(value = "loyalty_id", required = false)
-            @Parameter(description = "Customer loyalty ID", required = false)
-            String loyaltyId,
+            @RequestParam(required = false)
+            @Parameter(description = "Loyalty ID of the customer")
+            String loyalty_id,
 
-            @RequestParam(value = "postal_code", required = false)
-            @Parameter(description = "Customer postal code", required = false)
-            String postalCode,
+            @RequestParam(required = false)
+            @Parameter(description = "Postal code of the customer")
+            String postal_code,
 
-            @RequestParam(value = "affiliation", required = false)
-            @Parameter(description = "Customer affiliation", required = false)
+            @RequestParam(required = false)
+            @Parameter(description = "Affiliation of the customer")
             String affiliation,
 
-            @RequestParam(value = "date_of_birth", required = false)
-            @Parameter(description = "Customer date of birth", required = false)
-            String dateOfBirth,
+            @RequestParam(required = false)
+            @Parameter(description = "Date of birth of the customer (YYYY-MM-DD)")
+            String date_of_birth,
 
-            @RequestParam(value = "email", required = false)
-            @Parameter(description = "Customer email", required = false)
+            @RequestParam(required = false)
+            @Parameter(description = "Email of the customer")
             String email,
 
-            @RequestParam(value = "phone_number", required = false)
-            @Parameter(description = "Customer phone number", required = false)
-            String phoneNumber) {
+            @RequestParam(required = false)
+            @Parameter(description = "Phone number of the customer")
+            String phone_number) {
 
         String correlationId = CorrelationIdUtil.getCorrelationId();
-        log.info("Received request to search customers for brand: {}. Correlation ID: {}",
-                brandStr, correlationId);
+        log.info("Received search request for brand: {}. Correlation ID: {}", brand, correlationId);
 
-        Brand brand = Brand.fromString(brandStr);
+        Brand brandEnum = Brand.fromString(brand);
+        log.debug("Validated brand: {}", brandEnum.getDisplayName());
 
-        Map<String, String> queryParams = new LinkedHashMap<>();
-        if (firstName != null && !firstName.trim().isEmpty()) queryParams.put("first_name", firstName);
-        if (lastName != null && !lastName.trim().isEmpty()) queryParams.put("last_name", lastName);
-        if (loyaltyId != null && !loyaltyId.trim().isEmpty()) queryParams.put("loyalty_id", loyaltyId);
-        if (postalCode != null && !postalCode.trim().isEmpty()) queryParams.put("postal_code", postalCode);
-        if (affiliation != null && !affiliation.trim().isEmpty()) queryParams.put("affiliation", affiliation);
-        if (dateOfBirth != null && !dateOfBirth.trim().isEmpty()) queryParams.put("date_of_birth", dateOfBirth);
-        if (email != null && !email.trim().isEmpty()) queryParams.put("email", email);
-        if (phoneNumber != null && !phoneNumber.trim().isEmpty()) queryParams.put("phone_number", phoneNumber);
+        Map<String, String> queryParams = new HashMap<>();
+        if (first_name != null) queryParams.put("first_name", first_name);
+        if (last_name != null) queryParams.put("last_name", last_name);
+        if (loyalty_id != null) queryParams.put("loyalty_id", loyalty_id);
+        if (postal_code != null) queryParams.put("postal_code", postal_code);
+        if (affiliation != null) queryParams.put("affiliation", affiliation);
+        if (date_of_birth != null) queryParams.put("date_of_birth", date_of_birth);
+        if (email != null) queryParams.put("email", email);
+        if (phone_number != null) queryParams.put("phone_number", phone_number);
 
-        Object result = customerService.searchCustomers(brand, queryParams);
+        Object result = customerService.searchCustomers(brandEnum, queryParams);
+        log.info("Search completed successfully. Correlation ID: {}", correlationId);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Correlation-Id", correlationId);
-
-        log.info("Successfully processed customer search request. Correlation ID: {}", correlationId);
-        return ResponseEntity.ok().headers(headers).body(result);
+        return ResponseEntity.ok(result);
     }
 }
